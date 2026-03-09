@@ -3,11 +3,15 @@ $indigo: #4e46e5;
 .timeline-row {
   position: relative;
   height: 60px;
-  border-bottom: 1px solid #e8eaed;
+  /* remove horizontal row divider so vertical month stripes are primary */
+  border-bottom: none;
   cursor: pointer;
   transition: background 0.1s;
 
-  &--hovered { background: #f0efff; }
+  /* Ensure rows are transparent by default so vertical month stripes show through */
+  background: transparent;
+
+  &--hovered { background: rgba(240,238,255,0.6); }
 
   &__bars {
     position: relative;

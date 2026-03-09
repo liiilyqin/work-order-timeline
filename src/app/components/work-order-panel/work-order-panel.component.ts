@@ -7,9 +7,7 @@ import {
   AbstractControl, ValidationErrors
 } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import {
-  NgbDatepickerModule, NgbDateStruct
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { PanelMode, WorkOrderStatus } from '../../models/work-order.model';
 import { WorkOrderService } from '../../services/work-order.service';
 
@@ -18,7 +16,7 @@ interface StatusOption { label: string; value: WorkOrderStatus; }
 @Component({
   selector: 'app-work-order-panel',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgSelectModule, NgbDatepickerModule],
+  imports: [CommonModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './work-order-panel.component.html',
   styleUrl: './work-order-panel.component.scss',
 })
@@ -49,6 +47,38 @@ export class WorkOrderPanelComponent implements OnInit {
   }
 
   ngOnInit(): void { this.buildForm(); }
+
+  /** Handle free-text date input (MM.DD.YYYY or MM.DD.YY) on blur */
+  onDateTextChange(which: 'start' | 'end', text: string): void {
+    const parsed = this.parseDateString(text);
+    const ctrl = which === 'start' ? this.startDateCtrl : this.endDateCtrl;
+    if (parsed) {
+      ctrl.setValue(parsed);
+      ctrl.setErrors(null);
+    } else if (!text || text.trim() === '') {
+      ctrl.setValue(null);
+    } else {
+      // keep control unchanged but mark as invalid so UI shows error after submit
+      ctrl.setErrors({ invalidDateText: true });
+    }
+  }
+
+  /** Parse user-typed date like MM.DD.YYYY or MM.DD.YY into NgbDateStruct */
+  private parseDateString(s: string): NgbDateStruct | null {
+    if (!s) return null;
+    const m = s.trim().match(/^(\d{1,2})[\.\-\/](\d{1,2})[\.\-\/](\d{2,4})$/);
+    if (!m) return null;
+    let month = Number(m[1]);
+    let day = Number(m[2]);
+    let year = Number(m[3]);
+    if (year < 100) {
+      // Assume 20xx for two-digit years
+      year += 2000;
+    }
+    // Basic validation
+    if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+    return { year, month, day };
+  }
 
   private buildForm(): void {
     let name = '';

@@ -21,9 +21,10 @@
     <!-- Scrollable timeline grid -->
     <div class="timeline-grid-scroll">
       <!-- Fix E: --col-w drives the repeating-linear-gradient column separators in SCSS -->
-      <div class="timeline-grid"
-           [style.width.px]="totalGridWidth()"
-           [style.--col-w.px]="COLUMN_WIDTH[zoom()]">
+        <div class="timeline-grid"
+          [style.width.px]="totalGridWidth()"
+          [style.--col-w.px]="COLUMN_WIDTH[zoom()]"
+          [ngStyle]="monthStripes()">
 
         <!-- Column headers -->
         <div class="grid-header">

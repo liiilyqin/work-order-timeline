@@ -1,5 +1,5 @@
 import {
-  Component, Input, inject, computed, signal, HostListener, ElementRef
+  Component, Input, inject, signal, HostListener, ElementRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WorkOrderDocument, ZoomLevel } from '../../models/work-order.model';
@@ -24,7 +24,8 @@ export class WorkOrderBarComponent {
   readonly menuOpen = signal(false);
   readonly hovered  = signal(false);
 
-  readonly barStyle = computed(() => {
+  // Recompute on each change detection to reflect plain @Input object updates
+  barStyle(): Record<string, string> {
     const style = getBarStyle(
       this.workOrder.data.startDate,
       this.workOrder.data.endDate,
@@ -36,9 +37,9 @@ export class WorkOrderBarComponent {
       left: `${style.left}px`,
       width: `${style.width}px`,
     };
-  });
+  }
 
-  readonly statusClass = computed(() => `bar--${this.workOrder.data.status}`);
+  statusClass(): string { return `bar--${this.workOrder.data.status}`; }
 
   toggleMenu(event: MouseEvent): void {
     event.stopPropagation();

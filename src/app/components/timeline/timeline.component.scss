@@ -1,7 +1,7 @@
 $row-height: 60px;
 $header-height: 48px;
 $left-panel-width: 340px;
-$border-color: #e8eaed;
+$border-color: #f5f5f5;
 $header-bg: #fff;
 $indigo: #4e46e5;
 $purple-line: #7c3aed;
@@ -20,7 +20,7 @@ $font-family: "Circular-Std", -apple-system, BlinkMacSystemFont, "Segoe UI", san
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  background: #fff;
+  background: #fbf9ff; /* slightly lighter purple background */
 }
 
 .timeline-body {
@@ -63,7 +63,7 @@ $font-family: "Circular-Std", -apple-system, BlinkMacSystemFont, "Segoe UI", san
     font-weight: 400;
     color: #374151;
     background: #fff;
-    border-bottom: 1px solid $border-color;
+    border-bottom: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -75,6 +75,49 @@ export class TimelineComponent implements OnInit {
     return idx < 0 ? 0 : idx * COLUMN_WIDTH[this.zoom()];
   });
 
+  /** Create subtle month-wide vertical tint stripes by grouping consecutive columns by month */
+  readonly monthStripes = computed(() => {
+    const cols = this.columns();
+    const colW = COLUMN_WIDTH[this.zoom()];
+    if (!cols.length) return {} as Record<string,string>;
+
+    type Group = { start: number; end: number };
+    const groups: Group[] = [];
+    let start = 0;
+    let curMonth = cols[0].date.getMonth();
+    let curYear = cols[0].date.getFullYear();
+    for (let i = 1; i < cols.length; i++) {
+      const d = cols[i].date;
+      if (d.getMonth() !== curMonth || d.getFullYear() !== curYear) {
+        groups.push({ start, end: i - 1 });
+        start = i;
+        curMonth = d.getMonth();
+        curYear = d.getFullYear();
+      }
+    }
+    groups.push({ start, end: cols.length - 1 });
+
+    const layers: string[] = [];
+    const sizes: string[] = [];
+    const positions: string[] = [];
+
+    for (const g of groups) {
+      const left = g.start * colW;
+      const width = (g.end - g.start + 1) * colW;
+      // use subtle gray tint for month stripes
+      layers.push('linear-gradient(90deg, rgba(0,0,0,0.04) 0 100%)');
+      sizes.push(`${width}px 100%`);
+      positions.push(`${left}px 0`);
+    }
+
+    return {
+      'background-image': layers.join(', '),
+      'background-size': sizes.join(', '),
+      'background-position': positions.join(', '),
+      'background-repeat': 'no-repeat'
+    } as Record<string,string>;
+  });
+
   ngOnInit(): void {
     // Scroll to center on today after view renders
     setTimeout(() => this.scrollToToday(), 50);
