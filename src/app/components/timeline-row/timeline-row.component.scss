@@ -1,0 +1,36 @@
+$indigo: #4e46e5;
+
+.timeline-row {
+  position: relative;
+  height: 60px;
+  border-bottom: 1px solid #e8eaed;
+  cursor: pointer;
+  transition: background 0.1s;
+
+  &--hovered { background: #f0efff; }
+
+  &__bars {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* ── "Click to add dates" tooltip ──────────── */
+.add-tooltip {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #1e1b4b;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 2px 12px rgba(78, 70, 229, 0.22);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 20;
+  font-family: "Circular-Std", -apple-system, sans-serif;
+}

@@ -1,0 +1,34 @@
+<div class="page-shell">
+  <!-- NAOLOGIC logo -->
+  <div class="naologic-logo">
+    <span class="logo-nao">NAO</span><span class="logo-logic">LOGIC</span>
+  </div>
+
+  <!-- Page title -->
+  <h1 class="page-title">Work Orders</h1>
+
+  <!-- Timescale pill selector -->
+  <div class="timescale-row">
+    <span class="timescale-label">Timescale</span>
+
+    <div class="zoom-pill-wrap">
+      <button class="zoom-pill" (click)="toggleDropdown(); $event.stopPropagation()">
+        {{ activeLabel }} <span class="zoom-pill__chevron">▾</span>
+      </button>
+
+      @if (dropdownOpen()) {
+        <div class="zoom-dropdown">
+          @for (opt of zoomOptions; track opt.value + opt.label) {
+            <button
+              class="zoom-dropdown__item"
+              [class.zoom-dropdown__item--active]="zoom === opt.value && activeLabel === opt.label"
+              (click)="select(opt.value); $event.stopPropagation()"
+            >
+              {{ opt.label }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

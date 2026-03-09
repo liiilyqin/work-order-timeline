@@ -1,0 +1,69 @@
+<div class="timeline-wrapper">
+  <!-- Header: logo + title + timescale -->
+  <app-timeline-header
+    [zoom]="zoom()"
+    (zoomChange)="onZoomChange($event)"
+  ></app-timeline-header>
+
+  <div class="timeline-body">
+    <!-- Fixed left panel: work center names -->
+    <div class="left-panel">
+      <div class="left-panel__header">Work Center</div>
+      @for (wc of workCenters(); track wc.docId) {
+        <!-- Mirror the hover state from the corresponding timeline row -->
+        <div
+          class="left-panel__row"
+          [class.left-panel__row--hovered]="hoveredWcId() === wc.docId"
+        >{{ wc.data.name }}</div>
+      }
+    </div>
+
+    <!-- Scrollable timeline grid -->
+    <div class="timeline-grid-scroll">
+      <!-- Fix E: --col-w drives the repeating-linear-gradient column separators in SCSS -->
+      <div class="timeline-grid"
+           [style.width.px]="totalGridWidth()"
+           [style.--col-w.px]="COLUMN_WIDTH[zoom()]">
+
+        <!-- Column headers -->
+        <div class="grid-header">
+          @for (col of columns(); track col.isoDate) {
+            <div
+              class="grid-header__cell"
+              [class.grid-header__cell--current]="col.isoDate === currentPeriodIso()"
+              [style.width.px]="COLUMN_WIDTH[zoom()]"
+            >
+              <!-- Label ABOVE date text (design: pill at top, date below) -->
+              @if (col.isoDate === currentPeriodIso()) {
+                <span class="current-period-label">{{ currentPeriodLabel() }}</span>
+              }
+              <span class="col-date-text">{{ col.label }}</span>
+            </div>
+          }
+        </div>
+
+        <!-- Current period vertical line — left edge of current column, no background band -->
+        <div class="today-line" [style.left.px]="todayOffset()"></div>
+
+        <!-- Rows per work center -->
+        @for (wc of workCenters(); track wc.docId) {
+          <app-timeline-row
+            [workCenter]="wc"
+            [columns]="columns()"
+            [zoom]="zoom()"
+            (hoverChange)="onRowHover(wc.docId, $event)"
+          ></app-timeline-row>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide-out panel overlay -->
+  @if (panelMode()) {
+    <div class="panel-overlay" (click)="closePanel()"></div>
+    <app-work-order-panel
+      [mode]="panelMode()!"
+      (close)="closePanel()"
+    ></app-work-order-panel>
+  }
+</div>

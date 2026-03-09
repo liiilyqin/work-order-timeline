@@ -1,0 +1,175 @@
+$row-height: 60px;
+$header-height: 48px;
+$left-panel-width: 340px;
+$border-color: #e8eaed;
+$header-bg: #fff;
+$indigo: #4e46e5;
+$purple-line: #7c3aed;
+$current-bg: #f0f0ff;   /* header-cell tint for current period */
+$hover-bg: #f0efff;
+$font-family: "Circular-Std", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+:host {
+  display: block;
+  font-family: $font-family;
+}
+
+.timeline-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: #fff;
+}
+
+.timeline-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  border-top: 1px solid $border-color;
+}
+
+/* ── Left panel ─────────────────────────────── */
+/* Fix D: white background distinguishes left panel from #f5f7fa page */
+.left-panel {
+  flex-shrink: 0;
+  width: $left-panel-width;
+  border-right: 1px solid $border-color;
+  background: #fff;
+  z-index: 10;
+
+  &__header {
+    height: $header-height;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 24px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #9ca3af;
+    /* Fix A: design shows "Work Center" in mixed case, not ALL-CAPS */
+    text-transform: none;
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid $border-color;
+    background: $header-bg;
+  }
+
+  &__row {
+    height: $row-height;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #374151;
+    background: #fff;
+    border-bottom: 1px solid $border-color;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background 0.1s;
+
+    /* Highlight mirrors the timeline row's hover state */
+    &--hovered { background: $hover-bg; }
+  }
+}
+
+/* ── Scrollable grid ─────────────────────────── */
+.timeline-grid-scroll {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+
+  &::-webkit-scrollbar { height: 6px; }
+  &::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+}
+
+/* Repeating vertical column grid lines — 1px $border-color on the right edge of every column.
+   --col-w is bound from Angular via [style.--col-w.px] so lines update on zoom change. */
+.timeline-grid {
+  position: relative;
+  min-height: 100%;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent calc(var(--col-w, 160px) - 1px),
+    #{$border-color} calc(var(--col-w, 160px) - 1px),
+    #{$border-color} var(--col-w, 160px)
+  );
+}
+
+/* ── Column headers ──────────────────────────── */
+.grid-header {
+  display: flex;
+  height: $header-height;
+  background: $header-bg;
+  border-bottom: 1px solid $border-color;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+
+  &__cell {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 4px 4px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #9ca3af;
+    border-right: 1px solid $border-color;
+    white-space: nowrap;
+    position: relative;
+
+    /* Current period column header: no background, just highlight the date text */
+    &--current {
+      .col-date-text { color: $indigo; font-weight: 600; }
+    }
+  }
+}
+
+/* "Current month / week / Today" purple pill — shown ABOVE date text */
+.current-period-label {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 600;
+  color: #6d28d9;
+  background: #ede9fe;
+  padding: 1px 6px;
+  border-radius: 100px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+
+.col-date-text {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+/* ── Current period vertical line ─────────────
+   2px purple line at the left edge of the current period column.
+   Fix C: z-index 2 puts it BEHIND bars (z-index 3) so bars render above it.
+   Starts below the sticky header; the body area only.
+   ─────────────────────────────────────────── */
+.today-line {
+  position: absolute;
+  top: $header-height;
+  bottom: 0;
+  width: 2px;
+  background: $purple-line;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 2;   /* Fix C: was 4 — now BELOW bars (z-index 3) */
+}
+
+/* ── Panel overlay ─────────────────────────── */
+.panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}

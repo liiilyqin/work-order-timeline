@@ -1,0 +1,125 @@
+<div class="panel" (click)="onPanelClick($event)">
+
+  <!-- Header: title + subtitle + action buttons -->
+  <div class="panel__header">
+    <div class="panel__title-block">
+      <h3 class="panel__title">Work Order Details</h3>
+      <p class="panel__subtitle">Specify the dates, name and status for this order</p>
+    </div>
+    <div class="panel__header-actions">
+      <button type="button" class="btn btn--secondary" (click)="onCancel()">Cancel</button>
+      <button type="button" class="btn btn--primary" (click)="onSubmit()">{{ submitLabel }}</button>
+    </div>
+  </div>
+
+  <div class="panel__divider"></div>
+
+  <!-- Form -->
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="panel__form" novalidate>
+
+    <!-- Work Order Name -->
+    <div class="form-field">
+      <label class="form-field__label">Work Order Name</label>
+      <input
+        type="text"
+        class="form-field__input"
+        formControlName="name"
+        placeholder="Acme Inc."
+        [class.form-field__input--error]="submitted && nameCtrl.invalid"
+      />
+      @if (submitted && nameCtrl.hasError('required')) {
+        <span class="form-field__error">Name is required</span>
+      }
+    </div>
+
+    <!-- Status -->
+    <div class="form-field">
+      <label class="form-field__label">Status</label>
+      <ng-select
+        formControlName="status"
+        [items]="statusOptions"
+        bindLabel="label"
+        bindValue="value"
+        [clearable]="false"
+        [searchable]="false"
+        class="status-select"
+      >
+        <!-- Selected value template: show as colored badge -->
+        <ng-template ng-label-tmp let-item="item">
+          <span class="status-badge status-badge--{{ item.value }}">{{ item.label }}</span>
+        </ng-template>
+        <!-- Dropdown option template: badge + indigo check when selected -->
+        <ng-template ng-option-tmp let-item="item" let-selected="selected">
+          <span class="status-badge status-badge--{{ item.value }}">{{ item.label }}</span>
+        </ng-template>
+      </ng-select>
+    </div>
+
+    <!-- End Date (End date before Start date per design) -->
+    <div class="form-field">
+      <label class="form-field__label">End date</label>
+      <div class="date-input-wrap" [class.date-input-wrap--error]="submitted && endDateCtrl.invalid">
+        <input
+          class="form-field__input"
+          ngbDatepicker
+          #endPicker="ngbDatepicker"
+          formControlName="endDate"
+          [value]="formatNgbDate(endDateCtrl.value)"
+          placeholder="MM.DD.YYYY"
+          (click)="endPicker.toggle()"
+          readonly
+        />
+        <span class="date-input-wrap__icon" (click)="endPicker.toggle()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </span>
+      </div>
+      @if (submitted && endDateCtrl.hasError('required')) {
+        <span class="form-field__error">End date is required</span>
+      }
+      @if (submitted && form.hasError('endBeforeStart')) {
+        <span class="form-field__error">End date must be after start date</span>
+      }
+    </div>
+
+    <!-- Start Date -->
+    <div class="form-field">
+      <label class="form-field__label">Start date</label>
+      <div class="date-input-wrap" [class.date-input-wrap--error]="submitted && startDateCtrl.invalid">
+        <input
+          class="form-field__input"
+          ngbDatepicker
+          #startPicker="ngbDatepicker"
+          formControlName="startDate"
+          [value]="formatNgbDate(startDateCtrl.value)"
+          placeholder="MM.DD.YYYY"
+          (click)="startPicker.toggle()"
+          readonly
+        />
+        <span class="date-input-wrap__icon" (click)="startPicker.toggle()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </span>
+      </div>
+      @if (submitted && startDateCtrl.hasError('required')) {
+        <span class="form-field__error">Start date is required</span>
+      }
+    </div>
+
+    <!-- Overlap error -->
+    @if (overlapError) {
+      <div class="overlap-error">
+        ⚠ This work order overlaps with an existing order on the same work center. Please adjust the dates.
+      </div>
+    }
+
+  </form>
+</div>

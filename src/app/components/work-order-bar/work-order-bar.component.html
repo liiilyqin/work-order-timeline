@@ -1,0 +1,36 @@
+<div
+  class="work-order-bar"
+  [class]="statusClass()"
+  [ngStyle]="barStyle()"
+  (click)="$event.stopPropagation()"
+  (mouseenter)="hovered.set(true)"
+  (mouseleave)="hovered.set(false)"
+>
+  <!-- Name (left) -->
+  <span class="bar__name">{{ workOrder.data.name }}</span>
+
+  <!-- Status badge (right, always visible) -->
+  <span class="bar__status">
+    @switch (workOrder.data.status) {
+      @case ('open')        { Open }
+      @case ('in-progress') { In Progress }
+      @case ('complete')    { Complete }
+      @case ('blocked')     { Blocked }
+    }
+  </span>
+
+  <!-- Three-dot menu button (only on hover) -->
+  @if (hovered() || menuOpen()) {
+    <button class="bar__menu-btn" (click)="toggleMenu($event)" aria-label="Actions">
+      <span class="bar__dots">•••</span>
+    </button>
+  }
+
+  <!-- Dropdown -->
+  @if (menuOpen()) {
+    <div class="bar__dropdown">
+      <button class="bar__dropdown-item" (click)="onEdit($event)">Edit</button>
+      <button class="bar__dropdown-item bar__dropdown-item--danger" (click)="onDelete($event)">Delete</button>
+    </div>
+  }
+</div>

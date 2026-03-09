@@ -1,0 +1,25 @@
+<div
+  class="timeline-row"
+  [class.timeline-row--hovered]="hovered()"
+  (mouseenter)="hovered.set(true); hoverChange.emit(true)"
+  (mouseleave)="hovered.set(false); tooltipX.set(null); hoverChange.emit(false)"
+  (mousemove)="onMouseMove($event)"
+  (click)="onRowClick($event)"
+>
+  <div class="timeline-row__bars">
+    @for (wo of workOrders(); track wo.docId) {
+      <app-work-order-bar
+        [workOrder]="wo"
+        [columns]="columns"
+        [zoom]="zoom"
+      ></app-work-order-bar>
+    }
+  </div>
+
+  <!-- "Click to add dates" tooltip -->
+  @if (hovered() && tooltipX() !== null && !overBar()) {
+    <div class="add-tooltip" [style.left.px]="tooltipX()!">
+      Click to add dates
+    </div>
+  }
+</div>
