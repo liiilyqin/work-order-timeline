@@ -67,9 +67,9 @@ export function generateColumns(zoom: ZoomLevel, today: Date = new Date()): Time
     for (let i = -buf; i <= buf; i++) {
       const d = addDays(origin, i);
       const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      // Short day label: "Mon 9" (omit month) to avoid header overlap at small widths
       columns.push({
-        label: `${weekdays[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`,
+        label: `${weekdays[d.getDay()]} ${d.getDate()}`,
         date: d,
         isoDate: toISODate(d),
       });

@@ -122,6 +122,8 @@ $font-family: "Circular-Std", -apple-system, BlinkMacSystemFont, "Segoe UI", san
     color: #9ca3af;
     border-right: 1px solid $border-color;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     position: relative;
 
     /* Current period column header: no background, just highlight the date text */
@@ -148,6 +150,10 @@ $font-family: "Circular-Std", -apple-system, BlinkMacSystemFont, "Segoe UI", san
 .col-date-text {
   font-size: 12px;
   line-height: 1.2;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ── Current period vertical line ─────────────
