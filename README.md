@@ -3,6 +3,8 @@
 A pixel-perfect Angular 17 interactive timeline for visualizing and managing work orders across multiple work centers in a manufacturing ERP context.
 
 ---
+## Demo Recording
+https://www.loom.com/share/4f61b46f60f54cc6b1b3228f4acc7129
 
 ## Setup & Running
 
