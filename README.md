@@ -4,7 +4,7 @@ A pixel-perfect Angular 17 interactive timeline for visualizing and managing wor
 
 ---
 ## Demo Recording
-https://www.loom.com/share/4f61b46f60f54cc6b1b3228f4acc7129
+https://www.loom.com/share/ce4fb94e36694d4e88323656354f00d3
 
 ## Setup & Running
 
